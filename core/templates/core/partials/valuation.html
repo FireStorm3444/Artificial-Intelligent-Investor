@@ -1,0 +1,119 @@
+<div class="valuation-split-container">
+    <!-- Graham Number Section (Left) -->
+    <div class="valuation-section graham-section">
+        {% if graham_number %}
+        <div class="valuation-header">
+            <h3 class="sub-heading">Graham Number Valuation</h3>
+            <span class="valuation-badge {{ color }}">
+                {{ valuation_status }} by {{ difference_pct }}
+            </span>
+        </div>
+
+        <div class="valuation-grid">
+            <div class="val-card main-result">
+                <div class="val-label">Intrinsic Value (Graham)</div>
+                <div class="val-value">₹ {{ graham_number|floatformat:2 }}</div>
+            </div>
+
+            <div class="val-card">
+                <div class="val-label">Current Price</div>
+                <div class="val-value">₹ {{ current_price|floatformat:2 }}</div>
+            </div>
+
+            <div class="val-card component">
+                <div class="val-label">EPS (TTM)</div>
+                <div class="val-value">₹ {{ eps|floatformat:2 }}</div>
+            </div>
+
+            <div class="val-card component">
+                <div class="val-label">Book Value</div>
+                <div class="val-value">₹ {{ book_value|floatformat:2 }}</div>
+            </div>
+        </div>
+
+        <p class="val-note">
+            <small><strong>Formula:</strong> √(22.5 × EPS × Book Value). Benjamin Graham considered stocks trading below this number to be theoretically undervalued.</small>
+        </p>
+        {% else %}
+        <div class="alert alert-warning">
+            Could not calculate Graham Number. The company might have negative earnings or book value.
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- DCF Section (Right) -->
+    <div class="valuation-section dcf-section">
+        {% if show_dcf %}
+        <div class="valuation-header">
+            <h3 class="sub-heading">Discounted Cash Flow (DCF)</h3>
+            {% if dcf_valuation_status %}
+                <span class="valuation-badge {{ dcf_color }}">
+                    {{ dcf_valuation_status }} by {{ dcf_difference_pct }}
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="valuation-grid dcf-grid">
+            <div class="val-card main-result">
+                <div class="val-label">DCF Fair Value</div>
+                <div class="val-value">
+                    {% if dcf_price != 'N/A' %}
+                        ₹ {{ dcf_price|floatformat:2 }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="val-card">
+                <div class="val-label">Current Price</div>
+                <div class="val-value">₹ {{ current_price|floatformat:2 }}</div>
+            </div>
+
+            <div class="val-card component full-width">
+                <div class="val-label">Growth Rate Assumption</div>
+                <div class="val-input-container">
+                    <input type="number"
+                           id="growth-rate-input"
+                           value="{{ growth_rate_input }}"
+                           min="0"
+                           max="100"
+                           step="1"
+                           class="growth-rate-input"
+                           aria-label="Growth Rate Percentage">
+                    <span class="val-input-suffix">%</span>
+                    <button id="recalculate-dcf" class="btn-recalculate">Recalculate</button>
+                </div>
+            </div>
+        </div>
+
+        <p class="val-note">
+            Calculation based on <strong>{{ metric_used }}</strong> growing at {{ growth_rate_input }}% annually.
+        </p>
+        {% else %}
+            <div class="alert alert-warning" style="margin-top: 20px;">
+                Cannot calculate DCF (Negative Cash Flow & Earnings).
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if show_dcf %}
+<script>
+document.getElementById('recalculate-dcf').addEventListener('click', function() {
+    const growthRate = document.getElementById('growth-rate-input').value;
+    const ticker = window.location.pathname.split('/')[2]; // Get ticker from URL
+    const url = `/stock/${ticker}/valuation/?growth_rate=${growthRate}`;
+
+    // Reload the valuation section with new growth rate
+    htmx.ajax('GET', url, {target: '#valuation', swap: 'innerHTML'});
+});
+
+// Allow Enter key to trigger recalculation
+document.getElementById('growth-rate-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        document.getElementById('recalculate-dcf').click();
+    }
+});
+</script>
+{% endif %}

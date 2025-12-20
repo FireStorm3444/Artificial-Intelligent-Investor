@@ -1,0 +1,8 @@
+{% if chart_html %}
+    <div id="chart-container">
+        {{ chart_html|safe }}
+    </div>
+{% else %}
+    <div class="alert alert-warning">Failed to fetch Price Chart. Please try again.</div>
+{% endif %}
+

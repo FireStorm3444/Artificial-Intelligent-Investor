@@ -1,0 +1,36 @@
+{% if peer_details %}
+    <div class="peer-comparison-table-wrapper">
+        <table class="peer-comparison-table">
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Current Price</th>
+                    <th>Market Cap (Cr)</th>
+                    <th>P/E Ratio</th>
+                    <th>EPS</th>
+                    <th>Dividend Yield</th>
+                    <th>Beta</th>
+                    <th>52W High</th>
+                    <th>52W Low</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticker, data in peer_details.items %}
+                    <tr class="peer-row {% if data.is_base %}base-stock-row{% endif %}">
+                        <td class="peer-company-name"><a href="{% url 'stock_detail' data.ticker %}" class="heading-link" target="_blank">{{ data.name }} ({{ data.ticker }})</a></td>
+                        <td>{{ data.current_price }}</td>
+                        <td>{{ data.market_cap }}</td>
+                        <td>{{ data.pe_ratio }}</td>
+                        <td>{{ data.eps }}</td>
+                        <td>{{ data.dividend_yield }}</td>
+                        <td>{{ data.beta }}</td>
+                        <td>{{ data.52_week_high }}</td>
+                        <td>{{ data.52_week_low }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-warning">Failed to fetch Peers. Please try again.</div>
+{% endif %}

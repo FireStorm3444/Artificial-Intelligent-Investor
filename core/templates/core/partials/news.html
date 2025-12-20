@@ -1,0 +1,14 @@
+{% if news == "no_news" %}
+    <div class="alert alert-warning">No Stock News available.</div>
+{% elif news %}
+    <ul class="news-list">
+        {% for item in news %}
+            <li>
+                <a href="{{ item.link }}" target="_blank" class="heading-link" rel="noopener noreferrer">{{ item.title }}</a> <span class="news-date">{{ item.date }}</span>
+                <p class="news-summary">{{ item.summary }} <strong>({{ item.sentiment }})</strong></p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <div class="alert alert-warning">Failed to fetch Stock News. Please try again.</div>
+{% endif %}

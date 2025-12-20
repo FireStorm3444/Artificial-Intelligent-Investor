@@ -1,0 +1,140 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="search-container">
+    <h1>Artificial Intelligent Investor!</h1>
+    <div class="search-wrapper">
+        <input class="home-search input-card" type="search" name="search_term" id="search-term" placeholder="Search for a stock..."
+               hx-post="{% url 'search' %}"
+               hx-trigger="keyup changed delay:300ms, focus"
+               hx-target="#search-results"
+               hx-indicator=".htmx-indicator"
+               hx-vals='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'
+               autocomplete="off"
+        >
+        <span class="htmx-indicator">Searching...</span>
+        <div id="search-results" class="search-dropdown">
+            <!--Search results will be injected here-->
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-term');
+    const searchResults = document.getElementById('search-results');
+    let selectedIndex = -1;
+
+    function updateSelection() {
+        const items = searchResults.querySelectorAll('.dropdown-item');
+        items.forEach((item, index) => {
+            if (index === selectedIndex) {
+                item.classList.add('keyboard-selected');
+                item.scrollIntoView({ block: 'nearest' });
+            } else {
+                item.classList.remove('keyboard-selected');
+            }
+        });
+    }
+
+    function selectItem(index) {
+        const items = searchResults.querySelectorAll('.dropdown-item');
+        if (items[index]) {
+            const ticker = items[index].getAttribute('data-ticker');
+            if (ticker) {
+                window.location.href = `/stock/${ticker}`;
+            }
+        }
+    }
+
+    // Reset selection when new results are loaded
+    document.addEventListener('htmx:afterSwap', function(event) {
+        if (event.target.id === 'search-results') {
+            selectedIndex = -1;
+        }
+    });
+
+    searchInput.addEventListener('keydown', function(e) {
+        const items = searchResults.querySelectorAll('.dropdown-item');
+
+        switch(e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                if (items.length > 0) {
+                    selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                    updateSelection();
+                }
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                if (items.length > 0) {
+                    selectedIndex = Math.max(selectedIndex - 1, -1);
+                    updateSelection();
+                }
+                break;
+            case 'Enter':
+                e.preventDefault();
+                if (items.length > 0) {
+                    if (selectedIndex >= 0) {
+                        selectItem(selectedIndex);
+                    } else {
+                        // If no item is selected, select the first one
+                        selectItem(0);
+                    }
+                }
+                break;
+            case 'Escape':
+                searchInput.blur();
+                selectedIndex = -1;
+                break;
+        }
+    });
+
+    // Handle mouse hover to sync with keyboard navigation
+    searchResults.addEventListener('mouseover', function(e) {
+        const item = e.target.closest('.dropdown-item');
+        if (item) {
+            const items = searchResults.querySelectorAll('.dropdown-item');
+            selectedIndex = Array.from(items).indexOf(item);
+            updateSelection();
+        }
+    });
+
+    // Reset selection when mouse leaves dropdown
+    searchResults.addEventListener('mouseleave', function() {
+        selectedIndex = -1;
+        updateSelection();
+    });
+
+    // Reset selection when typing
+    searchInput.addEventListener('input', function() {
+        selectedIndex = -1;
+    });
+
+    // Handle mousedown on dropdown items (fires before blur event)
+    searchResults.addEventListener('mousedown', function(e) {
+        const item = e.target.closest('.dropdown-item');
+        if (item) {
+            e.preventDefault(); // Prevent input from losing focus
+            const ticker = item.getAttribute('data-ticker');
+            if (ticker) {
+                window.location.href = `/stock/${ticker}`;
+            }
+        }
+    });
+
+    // Also handle click as backup
+    searchResults.addEventListener('click', function(e) {
+        const item = e.target.closest('.dropdown-item');
+        if (item) {
+            e.preventDefault();
+            const ticker = item.getAttribute('data-ticker');
+            if (ticker) {
+                window.location.href = `/stock/${ticker}`;
+            }
+        }
+    });
+});
+</script>
+
+{% endblock %}

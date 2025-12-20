@@ -1,0 +1,112 @@
+{% if cash_flow_data %}
+    <div class="pnl-tabs">
+        <input type="radio" name="cashflow-tab" id="tab-cashflow-financials" class="tab-input"
+               {% if active_tab == 'financials' %}checked{% endif %} autocomplete="off">
+
+        <input type="radio" name="cashflow-tab" id="tab-cashflow-chart" class="tab-input"
+               {% if active_tab == 'chart' %}checked{% endif %} autocomplete="off">
+
+        <div class="tab-labels">
+            <label for="tab-cashflow-financials" class="tab-label">Financials</label>
+            <label for="tab-cashflow-chart" class="tab-label">Chart</label>
+        </div>
+
+        <div class="tab-content-container">
+            <div class="tab-content" id="content-cashflow-financials">
+                <div class="financial-table-container">
+                    <table class="financial-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                {% for year in years %}
+                                    <th>{{ year }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cash_flow_data %}
+                                <tr class="{% if item.is_subtotal %}subtotal-row{% elif item.is_total %}total-row{% endif %}{% if item.indent %} indent-{{ item.indent }}{% endif %}">
+                                    <td>{{ item.name }}</td>
+                                    {% for value in item.values %}
+                                        <td class="{% if value.is_negative %}negative-value{% elif value.is_positive %}positive-value{% endif %}">
+                                            {{ value.formatted }}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" id="content-cashflow-chart">
+                <form id="chart-form-cashflow">
+                    <input type="hidden" name="from_chart" value="true">
+
+                    <div class="chart-controls">
+                        <label>
+                            <input type="checkbox" name="operating" {% if show_operating_cash_flow %}checked{% endif %}
+                                   hx-trigger="change"
+                                   hx-get="{% url 'get_cash_flow' stock.ticker %}"
+                                   hx-target="closest .section-content"
+                                   hx-swap="innerHTML"
+                                   hx-include="#chart-form-cashflow"
+                                   autocomplete="off"
+                            >
+                            Operating Cash Flow
+                        </label>
+
+                        <label>
+                            <input type="checkbox" name="investing" {% if show_investing_cash_flow %}checked{% endif %}
+                                   hx-trigger="change"
+                                   hx-get="{% url 'get_cash_flow' stock.ticker %}"
+                                   hx-target="closest .section-content"
+                                   hx-swap="innerHTML"
+                                   hx-include="#chart-form-cashflow"
+                                   autocomplete="off"
+                            >
+                            Investing Cash Flow
+                        </label>
+
+                        <label>
+                            <input type="checkbox" name="financing" {% if show_financing_cash_flow %}checked{% endif %}
+                                   hx-trigger="change"
+                                   hx-get="{% url 'get_cash_flow' stock.ticker %}"
+                                   hx-target="closest .section-content"
+                                   hx-swap="innerHTML"
+                                   hx-include="#chart-form-cashflow"
+                                   autocomplete="off"
+                            >
+                            Financing Cash Flow
+                        </label>
+
+                        <label>
+                            <input type="checkbox" name="net" {% if show_net_cash_flow %}checked{% endif %}
+                                   hx-trigger="change"
+                                   hx-get="{% url 'get_cash_flow' stock.ticker %}"
+                                   hx-target="closest .section-content"
+                                   hx-swap="innerHTML"
+                                   hx-include="#chart-form-cashflow"
+                                   autocomplete="off"
+                            >
+                            Net Cash Flow
+                        </label>
+                    </div>
+                </form>
+
+                <div class="financial-chart-container">
+                    {% if show_operating_cash_flow or show_investing_cash_flow or show_financing_cash_flow or show_net_cash_flow %}
+                        {{ chart_html|safe }}
+                    {% else %}
+                        <div class="alert alert-warning" style="margin-top: 50px;">
+                            Select an option above to generate the chart.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="alert alert-warning">Failed to fetch Cash Flow. Please try again.</div>
+{% endif %}
+

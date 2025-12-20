@@ -1,0 +1,180 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block navbar_search %}
+<div class="navbar-search-wrapper">
+    <input class="navbar-search input-card" type="search" name="search_term" id="navbar-search-term" placeholder="Search stocks..."
+           hx-post="{% url 'search' %}"
+           hx-trigger="keyup changed delay:300ms, focus"
+           hx-target="#navbar-search-results"
+           hx-indicator=".navbar-htmx-indicator"
+           hx-vals='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'
+           autocomplete="off"
+    >
+    <span class="htmx-indicator navbar-htmx-indicator">...</span>
+    <div id="navbar-search-results" class="navbar-search-dropdown">
+        <!--Search results will be injected here-->
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/watchlist.css' %}">
+
+<div class="section-card">
+    <h2 style="margin: 0">My Watchlist</h2>
+
+    {% if stocks %}
+        <p class="auth-subtitle">You have {{ stocks|length }} stock{{ stocks|length|pluralize }} in your watchlist.</p>
+
+        <div class="watchlist-grid">
+            {% for stock in stocks %}
+                <div class="watchlist-item" id="watchlist-item-{{ stock.ticker }}">
+                    <div class="stock-info">
+                        <h3><a href="{% url 'stock_detail' stock.ticker %}" class="stock-link">{{ stock.ticker }}</a></h3>
+                        <p class="stock-name">{{ stock.name }}</p>
+<!--                        <p class="stock-added">Added: {{ stock.watchlist_set.first.added_at|date:"M d, Y" }}</p>-->
+                    </div>
+
+                    <div class="watchlist-actions">
+                        <a href="{% url 'stock_detail' stock.ticker %}" class="styled-button">View Details</a>
+                        <button hx-post="{% url 'users:toggle_watchlist' stock.ticker %}"
+                                hx-target="#watchlist-item-{{ stock.ticker }}"
+                                hx-swap="outerHTML"
+                                hx-confirm="Are you sure you want to remove {{ stock.ticker }} from your watchlist?"
+                                class="styled-button-secondary">
+                            Remove from Watchlist
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-watchlist">
+            <p style="margin: 0">Your watchlist is empty.</p>
+            <p>Start by searching for stocks and adding them to your watchlist!</p>
+            <a href="{% url 'home' %}" class="styled-button">Search Stocks</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('navbar-search-term');
+    const searchResults = document.getElementById('navbar-search-results');
+    let selectedIndex = -1;
+
+    function updateSelection() {
+        const items = searchResults.querySelectorAll('.dropdown-item');
+        items.forEach((item, index) => {
+            if (index === selectedIndex) {
+                item.classList.add('keyboard-selected');
+                item.scrollIntoView({ block: 'nearest' });
+            } else {
+                item.classList.remove('keyboard-selected');
+            }
+        });
+    }
+
+    function selectItem(index) {
+        const items = searchResults.querySelectorAll('.dropdown-item');
+        if (items[index]) {
+            const ticker = items[index].getAttribute('data-ticker');
+            if (ticker) {
+                window.location.href = `/stock/${ticker}`;
+            }
+        }
+    }
+
+    // Reset selection when new results are loaded
+    document.addEventListener('htmx:afterSwap', function(event) {
+        if (event.target.id === 'navbar-search-results') {
+            selectedIndex = -1;
+        }
+    });
+
+    searchInput.addEventListener('keydown', function(e) {
+        const items = searchResults.querySelectorAll('.dropdown-item');
+
+        switch(e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                if (items.length > 0) {
+                    selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                    updateSelection();
+                }
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                if (items.length > 0) {
+                    selectedIndex = Math.max(selectedIndex - 1, -1);
+                    updateSelection();
+                }
+                break;
+            case 'Enter':
+                e.preventDefault();
+                if (items.length > 0) {
+                    if (selectedIndex >= 0) {
+                        selectItem(selectedIndex);
+                    } else {
+                        selectItem(0);
+                    }
+                }
+                break;
+            case 'Escape':
+                searchInput.blur();
+                selectedIndex = -1;
+                break;
+        }
+    });
+
+    // Handle mouse hover to sync with keyboard navigation
+    searchResults.addEventListener('mouseover', function(e) {
+        const item = e.target.closest('.dropdown-item');
+        if (item) {
+            const items = searchResults.querySelectorAll('.dropdown-item');
+            selectedIndex = Array.from(items).indexOf(item);
+            updateSelection();
+        }
+    });
+
+    // Reset selection when mouse leaves dropdown
+    searchResults.addEventListener('mouseleave', function() {
+        selectedIndex = -1;
+        updateSelection();
+    });
+
+    // Reset selection when typing
+    searchInput.addEventListener('input', function() {
+        selectedIndex = -1;
+    });
+
+    // Handle mousedown on dropdown items (fires before blur event)
+    searchResults.addEventListener('mousedown', function(e) {
+        const item = e.target.closest('.dropdown-item');
+        if (item) {
+            e.preventDefault(); // Prevent input from losing focus
+            const ticker = item.getAttribute('data-ticker');
+            if (ticker) {
+                window.location.href = `/stock/${ticker}`;
+            }
+        }
+    });
+
+    // Also handle click as backup
+    searchResults.addEventListener('click', function(e) {
+        const item = e.target.closest('.dropdown-item');
+        if (item) {
+            e.preventDefault();
+            const ticker = item.getAttribute('data-ticker');
+            if (ticker) {
+                window.location.href = `/stock/${ticker}`;
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
+

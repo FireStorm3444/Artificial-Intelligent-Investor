@@ -1,0 +1,87 @@
+{% if profit_loss_data %}
+    {% with suffix=is_annual|yesno:"annual,quarterly" %}
+
+    <div class="pnl-tabs">
+        <input type="radio" name="pnl-tab-{{ suffix }}" id="tab-financials-{{ suffix }}" class="tab-input"
+               {% if active_tab == 'financials' %}checked{% endif %} autocomplete="off">
+
+        <input type="radio" name="pnl-tab-{{ suffix }}" id="tab-financials-chart-{{ suffix }}" class="tab-input"
+               {% if active_tab == 'chart' %}checked{% endif %} autocomplete="off">
+
+        <div class="tab-labels">
+            <label for="tab-financials-{{ suffix }}" class="tab-label">Financials</label>
+            <label for="tab-financials-chart-{{ suffix }}" class="tab-label">Chart</label>
+        </div>
+
+        <div class="tab-content-container">
+            <div class="tab-content" id="content-financials-{{ suffix }}">
+                 <div class="financial-table-container">
+                    <table class="financial-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                {% for year in years %}
+                                    <th>{{ year }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in profit_loss_data %}
+                                <tr class="{% if item.is_total %}total-row{% endif %}">
+                                    <td>{{ item.name }}</td>
+                                    {% for value in item.values %}
+                                        <td>{{ value.formatted }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" id="content-financials-chart-{{ suffix }}">
+                <form id="chart-form-{{ suffix }}">
+                    <input type="hidden" name="from_chart" value="true">
+
+                    <div class="chart-controls">
+                        <label>
+                            <input type="checkbox" name="revenue" {% if show_revenue %}checked{% endif %}
+                                   hx-trigger="change"
+                                   hx-get="{% if is_annual %}{% url 'get_profit_loss' stock.ticker %}{% else %}{% url 'get_profit_loss_quarterly' stock.ticker %}{% endif %}"
+                                   hx-target="closest .section-content"
+                                   hx-swap="innerHTML"
+                                   hx-include="#chart-form-{{ suffix }}"
+                                   autocomplete="off"
+                            >
+                            Total Revenue
+                        </label>
+
+                        <label>
+                            <input type="checkbox" name="profit" {% if show_profit %}checked{% endif %}
+                                   hx-trigger="change"
+                                   hx-get="{% if is_annual %}{% url 'get_profit_loss' stock.ticker %}{% else %}{% url 'get_profit_loss_quarterly' stock.ticker %}{% endif %}"
+                                   hx-target="closest .section-content"
+                                   hx-swap="innerHTML"
+                                   hx-include="#chart-form-{{ suffix }}"
+                                   autocomplete="off"
+                            >
+                            Net Income
+                        </label>
+                    </div>
+                </form>
+
+                <div class="financial-chart-container">
+                    {% if show_revenue or show_profit %}
+                        {{ chart_html|safe }}
+                    {% else %}
+                        <div class="alert alert-warning" style="margin-top: 50px;">
+                            Select an option above to generate the chart.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+{% else %}
+    {% endif %}

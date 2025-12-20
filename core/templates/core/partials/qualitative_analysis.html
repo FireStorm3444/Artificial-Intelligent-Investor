@@ -1,0 +1,65 @@
+{% if qualitative_analysis %}
+    <div class="qualitative-tabs">
+        <input type="radio" name="qual-tab" id="tab-business" class="tab-input" checked>
+        <input type="radio" name="qual-tab" id="tab-industry" class="tab-input">
+        <input type="radio" name="qual-tab" id="tab-competitive" class="tab-input">
+        <input type="radio" name="qual-tab" id="tab-management" class="tab-input">
+
+        <div class="tab-labels">
+            <label for="tab-business" class="tab-label">Business Model</label>
+            <label for="tab-industry" class="tab-label">Industry Analysis</label>
+            <label for="tab-competitive" class="tab-label">Competitive Landscape</label>
+            <label for="tab-management" class="tab-label">Management</label>
+        </div>
+
+        <div class="tab-content-container">
+            <div class="tab-content" id="content-business">
+                <ul class="qualitative-list">
+                    {% for item in qualitative_analysis.business_model %}
+                        <li>{{ item|safe }}</li>
+                    {% empty %}
+                        <li>No information available.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="tab-content" id="content-industry">
+                <ul class="qualitative-list">
+                    {% for item in qualitative_analysis.industry_analysis %}
+                        <li>{{ item|safe }}</li>
+                    {% empty %}
+                        <li>No information available.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="tab-content" id="content-competitive">
+                <ul class="qualitative-list">
+                    {% for item in qualitative_analysis.competitive_landscape %}
+                        <li>{{ item|safe }}</li>
+                    {% empty %}
+                        <li>No information available.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="tab-content" id="content-management">
+                <ul class="qualitative-list">
+                    {% for item in qualitative_analysis.management %}
+                        <li>{{ item|safe }}</li>
+                    {% empty %}
+                        <li>No information available.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        {% if analysis %}
+        <div class="analysis-footer" style="margin-top: 20px; text-align: left;">
+            <small>Last generated on: {{ analysis.last_generated|date:"d M Y, P" }}</small>
+        </div>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="alert alert-warning">Failed to fetch qualitative analysis. Please try again.</div>
+{% endif %}

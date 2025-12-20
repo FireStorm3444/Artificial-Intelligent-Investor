@@ -1,0 +1,61 @@
+{% if analysis_data %}
+    {% with saved_analysis=analysis_data %}
+    <div class="aii-analysis-container" id="analysis-display">
+        <div class="analysis-content">
+            <div class="aii-analysis-header">
+                <div class="ai-analysis-columns">
+                    <div class="ai-pros sub-section-card">
+                        <h3>Pros</h3>
+                        <ul>
+                            {% for pro in saved_analysis.pros %}
+                                <li>{{ pro|safe }}</li>
+                            {% empty %}
+                                <li>No pros identified.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="ai-cons sub-section-card">
+                        <h3>Cons</h3>
+                        <ul>
+                            {% for con in saved_analysis.cons %}
+                                <li>{{ con|safe }}</li>
+                            {% empty %}
+                                <li>No cons identified.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="ai-summary sub-section-card">
+                    <h3>Summary</h3>
+                    {% if saved_analysis.summary %}
+                        <p>{{ saved_analysis.summary }}</p>
+                    {% else %}
+                        <p>No summary available.</p>
+                    {% endif %}
+                    <br><br>
+                    <p class="ai-disclaimer">This analysis is not investment advice.</p>
+                </div>
+            </div>
+
+            <div class="analysis-footer">
+                <small>Last generated on: {{ analysis.last_updated|date:"d M Y, P" }}</small>
+                <div class="button-container">
+                    <button
+                        hx-get="{% url 'get_analysis' stock.ticker %}"
+                        hx-target="#analysis-content"
+                        hx-swap="innerHTML"
+                        class="regenerate-button styled-button">
+                        Regenerate
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="loader-container">
+            <div class="loader"></div>
+        </div>
+    </div>
+    {% endwith %}
+{% else %}
+    <div class="alert alert-warning">Failed to fetch Aii Analysis. Please try again.</div>
+{% endif %}

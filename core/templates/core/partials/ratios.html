@@ -1,0 +1,77 @@
+{% if ratios %}
+    <div class="ratios-container">
+        <!-- Valuation Ratios Section -->
+        <div class="ratio-section">
+            <h3 class="section-heading">Valuation Ratios</h3>
+            <div class="stats-grid">
+                {% for key, value in ratios.items %}
+                    {% if key in "Trailing P/E Ratio,Forward P/E Ratio,Price to Book,Price to Sales,EV/EBITDA,Dividend Yield" %}
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                {{ key }}
+                                <span class="info-icon" data-formula="{{ value.formula }}">ⓘ</span>
+                            </div>
+                            <div class="stat-value">{{ value.value }}</div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Profitability Ratios Section -->
+        <div class="ratio-section">
+            <h3 class="section-heading">Profitability Ratios</h3>
+            <div class="stats-grid">
+                {% for key, value in ratios.items %}
+                    {% if "ROE" in key or "ROA" in key or "EPS" in key or "Margin" in key %}
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                {{ key }}
+                                <span class="info-icon" data-formula="{{ value.formula }}">ⓘ</span>
+                            </div>
+                            <div class="stat-value">{{ value.value }}</div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Liquidity Ratios Section -->
+        <div class="ratio-section">
+            <h3 class="section-heading">Liquidity Ratios</h3>
+            <div class="stats-grid">
+                {% for key, value in ratios.items %}
+                    {% if "Current Ratio" in key or "Quick Ratio" in key %}
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                {{ key }}
+                                <span class="info-icon" data-formula="{{ value.formula }}">ⓘ</span>
+                            </div>
+                            <div class="stat-value">{{ value.value }}</div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Leverage Ratios Section -->
+        <div class="ratio-section">
+            <h3 class="section-heading">Leverage Ratios</h3>
+            <div class="stats-grid">
+                {% for key, value in ratios.items %}
+                    {% if "Debt" in key or "Interest Coverage" in key %}
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                {{ key }}
+                                <span class="info-icon" data-formula="{{ value.formula }}">ⓘ</span>
+                            </div>
+                            <div class="stat-value">{{ value.value }}</div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="alert alert-warning">Failed to fetch Ratios. Please try again.</div>
+{% endif %}

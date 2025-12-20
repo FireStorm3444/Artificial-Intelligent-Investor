@@ -1,0 +1,100 @@
+{% if balance_sheet_data %}
+    <div class="pnl-tabs">
+        <input type="radio" name="balance-tab" id="tab-balance-financials" class="tab-input"
+               {% if active_tab == 'financials' %}checked{% endif %} autocomplete="off">
+
+        <input type="radio" name="balance-tab" id="tab-balance-chart" class="tab-input"
+               {% if active_tab == 'chart' %}checked{% endif %} autocomplete="off">
+
+        <div class="tab-labels">
+            <label for="tab-balance-financials" class="tab-label">Financials</label>
+            <label for="tab-balance-chart" class="tab-label">Chart</label>
+        </div>
+
+        <div class="tab-content-container">
+            <div class="tab-content" id="content-balance-financials">
+                <div class="financial-table-container">
+                    <table class="financial-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                {% for year in years %}
+                                    <th>{{ year }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in balance_sheet_data %}
+                                <tr class="{% if item.is_subtotal %}subtotal-row{% elif item.is_total %}total-row{% endif %}{% if item.indent %} indent-{{ item.indent }}{% endif %}">
+                                    <td>{{ item.name }}</td>
+                                    {% for value in item.values %}
+                                        <td class="{% if value.is_negative %}negative-value{% elif value.is_positive %}positive-value{% endif %}">
+                                            {{ value.formatted }}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" id="content-balance-chart">
+                <form id="chart-form-balance">
+                    <input type="hidden" name="from_chart" value="true">
+
+                    <div class="chart-controls">
+                        <label>
+                            <input type="checkbox" name="assets" {% if show_assets %}checked{% endif %}
+                                   hx-trigger="change"
+                                   hx-get="{% url 'get_balance_sheet' stock.ticker %}"
+                                   hx-target="closest .section-content"
+                                   hx-swap="innerHTML"
+                                   hx-include="#chart-form-balance"
+                                   autocomplete="off"
+                            >
+                            Total Assets
+                        </label>
+
+                        <label>
+                            <input type="checkbox" name="liabilities" {% if show_liabilities %}checked{% endif %}
+                                   hx-trigger="change"
+                                   hx-get="{% url 'get_balance_sheet' stock.ticker %}"
+                                   hx-target="closest .section-content"
+                                   hx-swap="innerHTML"
+                                   hx-include="#chart-form-balance"
+                                   autocomplete="off"
+                            >
+                            Total Liabilities
+                        </label>
+
+                        <label>
+                            <input type="checkbox" name="equity" {% if show_equity %}checked{% endif %}
+                                   hx-trigger="change"
+                                   hx-get="{% url 'get_balance_sheet' stock.ticker %}"
+                                   hx-target="closest .section-content"
+                                   hx-swap="innerHTML"
+                                   hx-include="#chart-form-balance"
+                                   autocomplete="off"
+                            >
+                            Total Equity
+                        </label>
+                    </div>
+                </form>
+
+                <div class="financial-chart-container">
+                    {% if show_assets or show_liabilities or show_equity %}
+                        {{ chart_html|safe }}
+                    {% else %}
+                        <div class="alert alert-warning" style="margin-top: 50px;">
+                            Select an option above to generate the chart.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="alert alert-warning">Failed to fetch Balance Sheet. Please try again.</div>
+{% endif %}
+

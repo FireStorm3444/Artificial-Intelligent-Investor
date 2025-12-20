@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Artificial Intelligent Investor</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="sticky-navbar">
+        <nav class="navbar">
+            <div class="nav-col">
+                <div class="nav-logo">
+                    <a href="{% url 'home' %}" class="aii-logo">Aii</a>
+                </div>
+
+                <div class="nav-links">
+                    <a href="{% url 'home' %}" class="nav-link">HOME</a>
+                </div>
+            </div>
+
+            <div class="nav-col">
+                {% block navbar_search %}{% endblock %}
+                {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="styled-button-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ user.username }}
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url 'users:watchlist' %}">Watchlist</a>
+                            <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="auth-buttons">
+                        <a href="{% url 'account_login' %}" class="styled-button-secondary">Login</a>
+                        <a href="{% url 'account_signup' %}" class="styled-button">Register</a>
+                    </div>
+                {% endif %}
+            </div>
+        </nav>
+
+        {% block secondary_nav %}{% endblock secondary_nav %}
+    </header>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

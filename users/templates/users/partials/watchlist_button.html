@@ -1,0 +1,20 @@
+{% load static %}
+{% csrf_token %}
+
+{% if is_in_watchlist %}
+    <button hx-post="{% url 'users:toggle_watchlist' stock.ticker %}"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-target="#watchlist-button-container"
+            hx-swap="innerHTML"
+            class="styled-button-secondary watchlist-button">
+        Remove from Watchlist
+    </button>
+{% else %}
+    <button hx-post="{% url 'users:toggle_watchlist' stock.ticker %}"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-target="#watchlist-button-container"
+            hx-swap="innerHTML"
+            class="styled-button-secondary watchlist-button">
+        Add to Watchlist
+    </button>
+{% endif %}

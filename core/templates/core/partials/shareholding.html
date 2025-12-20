@@ -1,0 +1,74 @@
+{% if chart_html %}
+<div class="shareholding-container">
+
+    <div class="shareholding-chart-section">
+        <h3 class="sub-heading">Ownership Breakdown</h3>
+        <div class="chart-wrapper">
+            {{ chart_html|safe }}
+        </div>
+        <div class="holdings-summary">
+            <div class="holding-card promoter">
+                <span class="label">Promoters</span>
+                <span class="value">{{ insider_pct }}</span>
+            </div>
+            <div class="holding-card inst">
+                <span class="label">Institutions</span>
+                <span class="value">{{ inst_pct }}</span>
+            </div>
+            <div class="holding-card public">
+                <span class="label">Public</span>
+                <span class="value">{{ public_pct }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="shareholding-tables-section">
+        {% if top_institutions %}
+        <div class="holders-table-wrapper">
+            <h3 class="sub-heading">Top Institutional Holders</h3>
+            <table class="financial-table small-table">
+                <thead>
+                    <tr>
+                        <th>Holder</th>
+                        <th>% Holding</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in top_institutions %}
+                    <tr>
+                        <td>{{ item.holder }}</td>
+                        <td>{{ item.pct }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        {% if top_mutual_funds %}
+        <div class="holders-table-wrapper" style="margin-top: 20px;">
+            <h3 class="sub-heading">Top Mutual Funds</h3>
+            <table class="financial-table small-table">
+                <thead>
+                    <tr>
+                        <th>Fund</th>
+                        <th>% Holding</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in top_mutual_funds %}
+                    <tr>
+                        <td>{{ item.holder }}</td>
+                        <td>{{ item.pct }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% else %}
+    <div class="alert alert-warning">No Shareholding pattern available.</div>
+{% endif %}

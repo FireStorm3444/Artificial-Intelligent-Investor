@@ -1,0 +1,7 @@
+{% for stock in stocks %}
+  <div class="dropdown-item" data-ticker="{{ stock.ticker }}">
+    <div class="stock-name">{{ stock.name }} ({{ stock.ticker }})</div>
+  </div>
+{% empty %}
+  <div class="search-placeholder">No stocks found.</div>
+{% endfor %}
