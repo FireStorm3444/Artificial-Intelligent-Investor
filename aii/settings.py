@@ -189,3 +189,13 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Compression and caching support
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Trust the secure connection from Render
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Ensure the login redirect uses HTTPS
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
