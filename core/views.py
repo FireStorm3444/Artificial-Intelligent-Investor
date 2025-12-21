@@ -1605,3 +1605,21 @@ def get_valuation_partial(request, ticker, yf_ticker=None):
     except Exception as e:
         print(f"Error calculating valuation: {e}")
         return HttpResponse('<div class="alert alert-warning">Valuation data not available.</div>')
+
+
+def emergency_password_reset(request):
+    try:
+        # Get the first superuser found in the database
+        superuser = User.objects.filter(is_superuser=True).first()
+
+        if superuser:
+            # Set the new password here
+            new_pass = "SKumar@admin23444"
+            superuser.set_password(new_pass)
+            superuser.save()
+            return HttpResponse(f"Success! Password for '{superuser.username}' is now '{new_pass}'")
+        else:
+            return HttpResponse("Error: No superuser found in the database.")
+
+    except Exception as e:
+        return HttpResponse(f"Error: {e}")

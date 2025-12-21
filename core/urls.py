@@ -1,4 +1,5 @@
 from django.urls import path, include
+from .views import emergency_password_reset
 from . import views
 
 urlpatterns = [
