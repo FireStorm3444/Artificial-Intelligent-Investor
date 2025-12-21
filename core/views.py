@@ -1607,19 +1607,22 @@ def get_valuation_partial(request, ticker, yf_ticker=None):
         return HttpResponse('<div class="alert alert-warning">Valuation data not available.</div>')
 
 
-def emergency_password_reset(request):
-    try:
-        # Get the first superuser found in the database
-        superuser = User.objects.filter(is_superuser=True).first()
+from django.contrib.auth.models import User
+from django.http import HttpResponse
 
-        if superuser:
-            # Set the new password here
-            new_pass = "SKumar@admin23444"
-            superuser.set_password(new_pass)
-            superuser.save()
-            return HttpResponse(f"Success! Password for '{superuser.username}' is now '{new_pass}'")
+
+# --- DELETE THIS FUNCTION AFTER USE ---
+def emergency_create_superuser(request):
+    try:
+        # Check if the user already exists to prevent crashing
+        username = "SuperAdmin"
+        password = "SKumar@admin23444!"
+
+        if not User.objects.filter(username=username).exists():
+            User.objects.create_superuser(username, 'admin@example.com', password)
+            return HttpResponse(f"Success! Created superuser: <b>{username}</b> <br> Password: <b>{password}</b>")
         else:
-            return HttpResponse("Error: No superuser found in the database.")
+            return HttpResponse(f"User '{username}' already exists. Go to /admin/ and login.")
 
     except Exception as e:
-        return HttpResponse(f"Error: {e}")
+        return HttpResponse(f"Error creating user: {e}")
