@@ -5,7 +5,6 @@ class Stock(models.Model):
     name = models.CharField(max_length=255)
     industry = models.CharField(max_length=255, null=True, blank=True)
     sector = models.CharField(max_length=255, null=True, blank=True)
-    market_cap = models.BigIntegerField(null=True, blank=True, default=0)
     website = models.URLField(null=True, blank=True)
     last_updated = models.DateTimeField(auto_now=True)
 

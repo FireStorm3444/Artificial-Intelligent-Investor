@@ -1,5 +1,4 @@
 from django.urls import path, include
-from .views import emergency_create_superuser
 from . import views
 
 urlpatterns = [
@@ -19,5 +18,4 @@ urlpatterns = [
     path('stock/<str:ticker>/ratios/', views.get_ratios_partial, name='get_ratios'),
     path('stock/<str:ticker>/shareholding/', views.get_shareholding_partial, name='get_shareholding'),
     path('stock/<str:ticker>/valuation/', views.get_valuation_partial, name='get_valuation'),
-    path('emergency-create-999/', emergency_create_superuser),
 ]

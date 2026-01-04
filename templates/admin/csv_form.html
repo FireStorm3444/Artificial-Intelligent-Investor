@@ -1,0 +1,15 @@
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+<div>
+    <h2>Upload Stock CSV</h2>
+    <p>Format required: <b>Ticker, Name</b> (No headers)</p>
+    <form action="." method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="button" style="background: #447e9b; color: white; padding: 10px 20px; border: none; cursor: pointer;">
+            Upload
+        </button>
+    </form>
+</div>
+{% endblock %}
