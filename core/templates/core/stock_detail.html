@@ -74,7 +74,7 @@
     {% if user.is_authenticated %}
         <div class="section-content"
              hx-get="{% url 'get_qualitative_analysis' stock.ticker %}"
-             hx-trigger="click"
+             hx-trigger="load"
              hx-target="this"
              hx-swap="innerHTML">
             <div class="htmx-loading-container">
@@ -118,29 +118,29 @@
 {#    </div>#}
 {#</div>#}
 
-{#<div id="aii-analysis" class="aii-analysis-container section-card">#}
-{#    <h2>Aii Analysis</h2>#}
-{#    <div class="section-content">#}
-{#        <div id="analysis-content">#}
-{#            {% if saved_analysis %}#}
-{#                {% include "core/partials/aii_analysis.html" with analysis=saved_analysis analysis_data=analysis_data %}#}
-{#            {% else %}#}
-{#                <div class="button-container">#}
-{#                    <button#}
-{#                        hx-get="{% url 'get_analysis' stock.ticker %}"#}
-{#                        hx-target="#analysis-content"#}
-{#                        hx-swap="innerHTML"#}
-{#                        class="styled-button">Generate aii Analysis#}
-{#                    </button>#}
-{#                </div>#}
-{#            {% endif %}#}
-{#            <div class="htmx-loading-container">#}
-{#                <div class="htmx-loading-spinner"></div>#}
-{#                <div class="htmx-loading-text">Loading Aii Analysis...</div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#</div>#}
+<div id="aii-analysis" class="aii-analysis-container section-card">
+    <h2>Aii Analysis</h2>
+    <div class="section-content">
+        <div id="analysis-content">
+            {% if saved_analysis %}
+                {% include "core/partials/aii_analysis.html" with analysis=saved_analysis analysis_data=analysis_data %}
+            {% else %}
+                <div class="button-container">
+                    <button
+                        hx-get="{% url 'get_analysis' stock.ticker %}"
+                        hx-target="#analysis-content"
+                        hx-swap="innerHTML"
+                        class="styled-button">Generate aii Analysis
+                    </button>
+                </div>
+            {% endif %}
+            <div class="htmx-loading-container">
+                <div class="htmx-loading-spinner"></div>
+                <div class="htmx-loading-text">Loading Aii Analysis...</div>
+            </div>
+        </div>
+    </div>
+</div>
 {##}
 {#<div id="news" class="news-container section-card">#}
 {#    <h2>Recent News</h2>#}
