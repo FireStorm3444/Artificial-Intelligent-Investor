@@ -74,7 +74,7 @@
     {% if user.is_authenticated %}
         <div class="section-content"
              hx-get="{% url 'get_qualitative_analysis' stock.ticker %}"
-             hx-trigger="load"
+             hx-trigger="click"
              hx-target="this"
              hx-swap="innerHTML">
             <div class="htmx-loading-container">
@@ -103,171 +103,171 @@
         </div>
     </div>
 </div>
-
-<div id="chart" class="chart-container section-card">
-    <h2>Price Chart</h2>
-    <div class="section-content"
-         hx-get="{% url 'get_chart' stock.ticker %}"
-         hx-trigger="load"
-         hx-target="this"
-         hx-swap="innerHTML">
-        <div class="htmx-loading-container">
-            <div class="htmx-loading-spinner"></div>
-            <div class="htmx-loading-text">Loading Chart...</div>
-        </div>
-    </div>
-</div>
-
-<div id="aii-analysis" class="aii-analysis-container section-card">
-    <h2>Aii Analysis</h2>
-    <div class="section-content">
-        <div id="analysis-content">
-            {% if saved_analysis %}
-                {% include "core/partials/aii_analysis.html" with analysis=saved_analysis analysis_data=analysis_data %}
-            {% else %}
-                <div class="button-container">
-                    <button
-                        hx-get="{% url 'get_analysis' stock.ticker %}"
-                        hx-target="#analysis-content"
-                        hx-swap="innerHTML"
-                        class="styled-button">Generate aii Analysis
-                    </button>
-                </div>
-            {% endif %}
-            <div class="htmx-loading-container">
-                <div class="htmx-loading-spinner"></div>
-                <div class="htmx-loading-text">Loading Aii Analysis...</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="news" class="news-container section-card">
-    <h2>Recent News</h2>
-    <div class="section-content"
-         hx-get="{% url 'get_news' stock.ticker %}"
-         hx-trigger="load"
-         hx-target="this"
-         hx-swap="innerHTML">
-        <div class="htmx-loading-container">
-            <div class="htmx-loading-spinner"></div>
-            <div class="htmx-loading-text">Loading News...</div>
-        </div>
-    </div>
-</div>
-
-<div id="peers" class="peers-container section-card">
-    <h2>Peer Companies</h2>
-    <div class="section-content"
-         hx-get="{% url 'get_peers' stock.ticker %}"
-         hx-trigger="load"
-         hx-target="this"
-         hx-swap="innerHTML">
-        <div class="htmx-loading-container">
-            <div class="htmx-loading-spinner"></div>
-            <div class="htmx-loading-text">Loading Peers...</div>
-        </div>
-    </div>
-</div>
-
-<div id="quarters" class="quarterly-profits-container section-card">
-    <h2>Quarterly Results</h2>
-    <div class="section-content"
-         hx-get="{% url 'get_profit_loss_quarterly' stock.ticker %}"
-         hx-trigger="load"
-         hx-target="this"
-         hx-swap="innerHTML">
-        <div class="htmx-loading-container">
-            <div class="htmx-loading-spinner"></div>
-            <div class="htmx-loading-text">Loading Quarterly Profits...</div>
-        </div>
-    </div>
-</div>
-
-<div id="pnl" class="profits-container section-card">
-    <h2>Profit & Loss</h2>
-    <div class="section-content"
-         hx-get="{% url 'get_profit_loss' stock.ticker %}"
-         hx-trigger="load"
-         hx-target="this"
-         hx-swap="innerHTML">
-        <div class="htmx-loading-container">
-            <div class="htmx-loading-spinner"></div>
-            <div class="htmx-loading-text">Loading Profit & Loss...</div>
-        </div>
-    </div>
-</div>
-
-<div id="balance-sheet" class="balance-sheet-container section-card">
-    <h2>Balance Sheet</h2>
-    <div class="section-content"
-         hx-get="{% url 'get_balance_sheet' stock.ticker %}"
-         hx-trigger="load"
-         hx-target="this"
-         hx-swap="innerHTML">
-        <div class="htmx-loading-container">
-            <div class="htmx-loading-spinner"></div>
-            <div class="htmx-loading-text">Loading Balance Sheet...</div>
-        </div>
-    </div>
-</div>
-
-<div id="cash-flow" class="cash-flow-container section-card">
-    <h2>Cash Flow</h2>
-    <div class="section-content"
-         hx-get="{% url 'get_cash_flow' stock.ticker %}"
-         hx-trigger="load"
-         hx-target="this"
-         hx-swap="innerHTML">
-        <div class="htmx-loading-container">
-            <div class="htmx-loading-spinner"></div>
-            <div class="htmx-loading-text">Loading Cash Flow...</div>
-        </div>
-    </div>
-</div>
-
-<div id="ratios" class="ratios-container section-card">
-    <h2>Ratios</h2>
-    <div class="section-content"
-         hx-get="{% url 'get_ratios' stock.ticker %}"
-         hx-trigger="load"
-         hx-target="this"
-         hx-swap="innerHTML">
-        <div class="htmx-loading-container">
-            <div class="htmx-loading-spinner"></div>
-            <div class="htmx-loading-text">Loading Ratios...</div>
-        </div>
-    </div>
-</div>
-
-<div id="shareholding" class="shareholding-container section-card">
-    <h2>Shareholding Pattern</h2>
-    <div class="section-content"
-         hx-get="{% url 'get_shareholding' stock.ticker %}"
-         hx-trigger="load"
-         hx-target="this"
-         hx-swap="innerHTML">
-        <div class="htmx-loading-container">
-            <div class="htmx-loading-spinner"></div>
-            <div class="htmx-loading-text">Loading Shareholding...</div>
-        </div>
-    </div>
-</div>
-
-<div id="valuation" class="valuation-container section-card">
-    <h2>Valuation Analysis</h2>
-    <div class="section-content"
-         hx-get="{% url 'get_valuation' stock.ticker %}"
-         hx-trigger="load"
-         hx-target="this"
-         hx-swap="innerHTML">
-         <div class="htmx-loading-container">
-            <div class="htmx-loading-spinner"></div>
-            <div class="htmx-loading-text">Calculating Fair Value...</div>
-        </div>
-    </div>
-</div>
-{% endblock %}
+{##}
+{#<div id="chart" class="chart-container section-card">#}
+{#    <h2>Price Chart</h2>#}
+{#    <div class="section-content"#}
+{#         hx-get="{% url 'get_chart' stock.ticker %}"#}
+{#         hx-trigger="load"#}
+{#         hx-target="this"#}
+{#         hx-swap="innerHTML">#}
+{#        <div class="htmx-loading-container">#}
+{#            <div class="htmx-loading-spinner"></div>#}
+{#            <div class="htmx-loading-text">Loading Chart...</div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<div id="aii-analysis" class="aii-analysis-container section-card">#}
+{#    <h2>Aii Analysis</h2>#}
+{#    <div class="section-content">#}
+{#        <div id="analysis-content">#}
+{#            {% if saved_analysis %}#}
+{#                {% include "core/partials/aii_analysis.html" with analysis=saved_analysis analysis_data=analysis_data %}#}
+{#            {% else %}#}
+{#                <div class="button-container">#}
+{#                    <button#}
+{#                        hx-get="{% url 'get_analysis' stock.ticker %}"#}
+{#                        hx-target="#analysis-content"#}
+{#                        hx-swap="innerHTML"#}
+{#                        class="styled-button">Generate aii Analysis#}
+{#                    </button>#}
+{#                </div>#}
+{#            {% endif %}#}
+{#            <div class="htmx-loading-container">#}
+{#                <div class="htmx-loading-spinner"></div>#}
+{#                <div class="htmx-loading-text">Loading Aii Analysis...</div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<div id="news" class="news-container section-card">#}
+{#    <h2>Recent News</h2>#}
+{#    <div class="section-content"#}
+{#         hx-get="{% url 'get_news' stock.ticker %}"#}
+{#         hx-trigger="load"#}
+{#         hx-target="this"#}
+{#         hx-swap="innerHTML">#}
+{#        <div class="htmx-loading-container">#}
+{#            <div class="htmx-loading-spinner"></div>#}
+{#            <div class="htmx-loading-text">Loading News...</div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<div id="peers" class="peers-container section-card">#}
+{#    <h2>Peer Companies</h2>#}
+{#    <div class="section-content"#}
+{#         hx-get="{% url 'get_peers' stock.ticker %}"#}
+{#         hx-trigger="load"#}
+{#         hx-target="this"#}
+{#         hx-swap="innerHTML">#}
+{#        <div class="htmx-loading-container">#}
+{#            <div class="htmx-loading-spinner"></div>#}
+{#            <div class="htmx-loading-text">Loading Peers...</div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<div id="quarters" class="quarterly-profits-container section-card">#}
+{#    <h2>Quarterly Results</h2>#}
+{#    <div class="section-content"#}
+{#         hx-get="{% url 'get_profit_loss_quarterly' stock.ticker %}"#}
+{#         hx-trigger="load"#}
+{#         hx-target="this"#}
+{#         hx-swap="innerHTML">#}
+{#        <div class="htmx-loading-container">#}
+{#            <div class="htmx-loading-spinner"></div>#}
+{#            <div class="htmx-loading-text">Loading Quarterly Profits...</div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<div id="pnl" class="profits-container section-card">#}
+{#    <h2>Profit & Loss</h2>#}
+{#    <div class="section-content"#}
+{#         hx-get="{% url 'get_profit_loss' stock.ticker %}"#}
+{#         hx-trigger="load"#}
+{#         hx-target="this"#}
+{#         hx-swap="innerHTML">#}
+{#        <div class="htmx-loading-container">#}
+{#            <div class="htmx-loading-spinner"></div>#}
+{#            <div class="htmx-loading-text">Loading Profit & Loss...</div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<div id="balance-sheet" class="balance-sheet-container section-card">#}
+{#    <h2>Balance Sheet</h2>#}
+{#    <div class="section-content"#}
+{#         hx-get="{% url 'get_balance_sheet' stock.ticker %}"#}
+{#         hx-trigger="load"#}
+{#         hx-target="this"#}
+{#         hx-swap="innerHTML">#}
+{#        <div class="htmx-loading-container">#}
+{#            <div class="htmx-loading-spinner"></div>#}
+{#            <div class="htmx-loading-text">Loading Balance Sheet...</div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<div id="cash-flow" class="cash-flow-container section-card">#}
+{#    <h2>Cash Flow</h2>#}
+{#    <div class="section-content"#}
+{#         hx-get="{% url 'get_cash_flow' stock.ticker %}"#}
+{#         hx-trigger="load"#}
+{#         hx-target="this"#}
+{#         hx-swap="innerHTML">#}
+{#        <div class="htmx-loading-container">#}
+{#            <div class="htmx-loading-spinner"></div>#}
+{#            <div class="htmx-loading-text">Loading Cash Flow...</div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<div id="ratios" class="ratios-container section-card">#}
+{#    <h2>Ratios</h2>#}
+{#    <div class="section-content"#}
+{#         hx-get="{% url 'get_ratios' stock.ticker %}"#}
+{#         hx-trigger="load"#}
+{#         hx-target="this"#}
+{#         hx-swap="innerHTML">#}
+{#        <div class="htmx-loading-container">#}
+{#            <div class="htmx-loading-spinner"></div>#}
+{#            <div class="htmx-loading-text">Loading Ratios...</div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<div id="shareholding" class="shareholding-container section-card">#}
+{#    <h2>Shareholding Pattern</h2>#}
+{#    <div class="section-content"#}
+{#         hx-get="{% url 'get_shareholding' stock.ticker %}"#}
+{#         hx-trigger="load"#}
+{#         hx-target="this"#}
+{#         hx-swap="innerHTML">#}
+{#        <div class="htmx-loading-container">#}
+{#            <div class="htmx-loading-spinner"></div>#}
+{#            <div class="htmx-loading-text">Loading Shareholding...</div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<div id="valuation" class="valuation-container section-card">#}
+{#    <h2>Valuation Analysis</h2>#}
+{#    <div class="section-content"#}
+{#         hx-get="{% url 'get_valuation' stock.ticker %}"#}
+{#         hx-trigger="load"#}
+{#         hx-target="this"#}
+{#         hx-swap="innerHTML">#}
+{#         <div class="htmx-loading-container">#}
+{#            <div class="htmx-loading-spinner"></div>#}
+{#            <div class="htmx-loading-text">Calculating Fair Value...</div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{#{% endblock %}#}
 
 {% block scripts %}
 <script>

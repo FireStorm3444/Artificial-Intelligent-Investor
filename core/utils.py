@@ -23,7 +23,7 @@ class CachedTicker:
                 # If it's a rate limit error, wait and try again
                 if "too many requests" in error_msg or "429" in error_msg:
                     print(f"Rate limit hit for {self.ticker}. Retrying {i + 1}/{retries}...")
-                    time.sleep(random.uniform(1.5, 3.5))  # Sleep 1.5-3.5 seconds
+                    time.sleep(random.uniform(5, 10))  # Sleep 1.5-3.5 seconds
                 else:
                     # If it's another error (like Symbol Not Found), stop trying
                     print(f"Error fetching {attr_name} for {self.ticker}: {e}")
