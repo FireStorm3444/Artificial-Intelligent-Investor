@@ -9,9 +9,6 @@ from django.http import HttpResponse
 from .decorators import yf_ticker_required
 import plotly.graph_objects as go
 import pandas as pd
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from google import genai
-from google.genai import types
 from dotenv import load_dotenv
 import json
 from django.utils.html import escape
@@ -108,6 +105,8 @@ def stock_details(request, ticker):
     })
 
 def get_qualitative_analysis(stock):
+    from google import genai
+    from google.genai import types
     try:
         client = genai.Client()
 
@@ -470,6 +469,8 @@ def parse_aii_analysis(text):
 load_dotenv()
 
 def stock_ai_analysis(stock, key_stats, news):
+    from google import genai
+    from google.genai import types
     try:
         print(f"Getting Aii Analysis for: {stock.ticker}")
         client = genai.Client()
@@ -548,6 +549,7 @@ def get_analysis_partial(request, ticker):
                   {'analysis_data': parsed_analysis, 'stock': stock})
 
 def analyze_sentiment(text):
+    from nltk.sentiment.vader import SentimentIntensityAnalyzer
     if not text:
         return "No text provided for sentiment analysis."
 
