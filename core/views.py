@@ -1,4 +1,3 @@
-import yfinance as yf
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.template.defaultfilters import title
@@ -9,6 +8,7 @@ from core.trie_instance import stock_trie
 from django.http import HttpResponse
 from .decorators import yf_ticker_required
 import plotly.graph_objects as go
+import nltk
 import pandas as pd
 from dotenv import load_dotenv
 import json
@@ -550,6 +550,7 @@ def get_analysis_partial(request, ticker):
                   {'analysis_data': parsed_analysis, 'stock': stock})
 
 def analyze_sentiment(text):
+
     from nltk.sentiment.vader import SentimentIntensityAnalyzer
     if not text:
         return "No text provided for sentiment analysis."
