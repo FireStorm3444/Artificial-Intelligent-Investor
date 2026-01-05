@@ -1,3 +1,4 @@
+import requests
 import yfinance as yf
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -16,7 +17,13 @@ from dotenv import load_dotenv
 import json
 from django.utils.html import escape
 import math
-from django.contrib.auth.models import User
+
+def get_safe_ticker(ticker_symbol):
+    session = requests.Session()
+    session.headers.update({
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    })
+    return yf.Ticker(ticker_symbol, session=session)
 
 def home(request):
     return render(request, 'core/home.html')
@@ -60,7 +67,7 @@ def stock_details(request, ticker):
 
     # Get current price from yfinance
     try:
-        yf_ticker = yf.Ticker(stock.ticker + ".NS")
+        yf_ticker = get_safe_ticker(stock.ticker + ".NS")
         info = yf_ticker.info
         current_price = info.get('currentPrice')
         prev_close = info.get('previousClose')
@@ -622,7 +629,7 @@ def get_peer_comparison_partial(request, ticker):
         # Add peer companies
         for peer in peers:
             try:
-                peer_yf = yf.Ticker(peer.ticker + ".NS")
+                peer_yf = get_safe_ticker(peer.ticker + ".NS")
                 peer_info = peer_yf.info
 
                 market_cap = peer_info.get('marketCap', 0)
@@ -648,7 +655,7 @@ def get_peer_comparison_partial(request, ticker):
 
         # Add the current stock (base stock)
         try:
-            base_yf = yf.Ticker(stock.ticker + ".NS")
+            base_yf = get_safe_ticker(stock.ticker + ".NS")
             base_info = base_yf.info
 
             market_cap = base_info.get('marketCap', 0)
