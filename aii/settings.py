@@ -187,3 +187,15 @@ CSRF_COOKIE_SECURE = True
 
 # Ensure the login redirect uses HTTPS
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+
+# Caching Configuration
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'django_cache'),
+        'TIMEOUT': 1800, # Cache data for 30 minutes
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}
