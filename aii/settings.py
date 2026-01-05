@@ -191,11 +191,8 @@ ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 # Caching Configuration
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'django_cache'),
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
         'TIMEOUT': 1800, # Cache data for 30 minutes
-        'OPTIONS': {
-            'MAX_ENTRIES': 1000
-        }
     }
 }
