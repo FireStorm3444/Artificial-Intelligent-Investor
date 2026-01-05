@@ -1,13 +1,25 @@
 import yfinance as yf
 from django.http import HttpResponse
 from functools import wraps
+import requests_cache
+from datetime import timedelta
 
 def yf_ticker_required(view_func):
     @wraps(view_func)
     def wrapper(request, ticker, *args, **kwargs):
         try:
             # This is the repeated logic
-            yf_ticker = yf.Ticker(ticker + ".NS")
+            session = requests_cache.CachedSession(
+                'yfinance_cache',
+                expire_after=timedelta(minutes=30),
+                backend='sqlite'
+            )
+            session.headers.update({
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            })
+
+            # Pass the session to the Ticker
+            yf_ticker = yf.Ticker(ticker + ".NS", session=session)
             # We can also check here if the ticker is valid
             if not yf_ticker.info.get('regularMarketPrice'):
                 return HttpResponse(f"Invalid ticker or no data found for {ticker}.", status=404)

@@ -1,4 +1,6 @@
 import yfinance as yf
+import requests_cache
+from datetime import timedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.template.defaultfilters import title
@@ -13,6 +15,17 @@ from dotenv import load_dotenv
 import json
 from django.utils.html import escape
 import math
+
+session = requests_cache.CachedSession(
+    'yfinance_cache',
+    expire_after=timedelta(minutes=30),
+    backend='sqlite' # Stores cache in a file
+)
+
+# Add a fake Chrome User-Agent to the session
+session.headers.update({
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+})
 
 def home(request):
     return render(request, 'core/home.html')
@@ -56,7 +69,7 @@ def stock_details(request, ticker):
 
     # Get current price from yfinance
     try:
-        yf_ticker = yf.Ticker(stock.ticker + ".NS")
+        yf_ticker = yf.Ticker(stock.ticker + ".NS", session=session)
         info = yf_ticker.info
         current_price = info.get('currentPrice')
         prev_close = info.get('previousClose')
@@ -623,7 +636,7 @@ def get_peer_comparison_partial(request, ticker):
         # Add peer companies
         for peer in peers:
             try:
-                peer_yf = yf.Ticker(peer.ticker + ".NS")
+                peer_yf = yf.Ticker(peer.ticker + ".NS", session=session)
                 peer_info = peer_yf.info
 
                 market_cap = peer_info.get('marketCap', 0)
@@ -649,7 +662,7 @@ def get_peer_comparison_partial(request, ticker):
 
         # Add the current stock (base stock)
         try:
-            base_yf = yf.Ticker(stock.ticker + ".NS")
+            base_yf = yf.Ticker(stock.ticker + ".NS", session=session)
             base_info = base_yf.info
 
             market_cap = base_info.get('marketCap', 0)
