@@ -104,19 +104,19 @@
     </div>
 </div>
 
-<div id="chart" class="chart-container section-card">
-    <h2>Price Chart</h2>
-    <div class="section-content"
-         hx-get="{% url 'get_chart' stock.ticker %}"
-         hx-trigger="load"
-         hx-target="this"
-         hx-swap="innerHTML">
-        <div class="htmx-loading-container">
-            <div class="htmx-loading-spinner"></div>
-            <div class="htmx-loading-text">Loading Chart...</div>
-        </div>
-    </div>
-</div>
+{#<div id="chart" class="chart-container section-card">#}
+{#    <h2>Price Chart</h2>#}
+{#    <div class="section-content"#}
+{#         hx-get="{% url 'get_chart' stock.ticker %}"#}
+{#         hx-trigger="load"#}
+{#         hx-target="this"#}
+{#         hx-swap="innerHTML">#}
+{#        <div class="htmx-loading-container">#}
+{#            <div class="htmx-loading-spinner"></div>#}
+{#            <div class="htmx-loading-text">Loading Chart...</div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
 
 {#<div id="aii-analysis" class="aii-analysis-container section-card">#}
 {#    <h2>Aii Analysis</h2>#}
