@@ -38,57 +38,57 @@
 {% endblock secondary_nav %}
 
 {% block content %}
-<div id="qualitative-analysis" class="details-container section-card">
-    <div class="details-header">
-        <div class="stock-header">
-            <div class="stock-details">
-                <h1 style="margin: 0 10px 0 0">{{ stock.name }}</h1>
-                {% if stock.website %}
-                    <a href="{{ stock.website }}" class="heading-link" target="_blank" rel="noopener noreferrer">
-                        <h1 style="margin: 0">({{ stock.ticker }})</h1>
-                    </a>
-                {% else %}
-                    <h1 style="margin: 0">{{ stock.ticker }}</h1>
-                {% endif %}
-
-                {% if current_price %}
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="color: var(--text-color); font-weight: bold">
-                            ₹{{ current_price|floatformat:2 }}
-                        </span>
-                        {% if change and change_percent %}
-                            <span style="color: {{ price_change_color }}; font-size: 0.9rem;">
-                                {{ price_change_symbol }} {{ change|floatformat:2 }} ({{ change_percent|floatformat:2 }}%)
-                            </span>
-                        {% endif %}
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-        <div id="watchlist-button-container">
-            {% if user.is_authenticated %}
-                {% include 'users/partials/watchlist_button.html' %}
-            {% endif %}
-        </div>
-    </div>
-    {% if user.is_authenticated %}
-        <div class="section-content"
-             hx-get="{% url 'get_qualitative_analysis' stock.ticker %}"
-             hx-trigger="load"
-             hx-target="this"
-             hx-swap="innerHTML">
-            <div class="htmx-loading-container">
-                <div class="htmx-loading-spinner"></div>
-                <div class="htmx-loading-text">Generating Qualitative Analysis...</div>
-            </div>
-        </div>
-    {% else %}
-        <div class="button-container">
-            <a href="{% url 'account_login' %}" class="styled-button">Get Qualitative Analysis</a>
-        </div>
-    {% endif %}
-
-</div>
+{#<div id="qualitative-analysis" class="details-container section-card">#}
+{#    <div class="details-header">#}
+{#        <div class="stock-header">#}
+{#            <div class="stock-details">#}
+{#                <h1 style="margin: 0 10px 0 0">{{ stock.name }}</h1>#}
+{#                {% if stock.website %}#}
+{#                    <a href="{{ stock.website }}" class="heading-link" target="_blank" rel="noopener noreferrer">#}
+{#                        <h1 style="margin: 0">({{ stock.ticker }})</h1>#}
+{#                    </a>#}
+{#                {% else %}#}
+{#                    <h1 style="margin: 0">{{ stock.ticker }}</h1>#}
+{#                {% endif %}#}
+{##}
+{#                {% if current_price %}#}
+{#                    <div style="display: flex; align-items: center; gap: 10px;">#}
+{#                        <span style="color: var(--text-color); font-weight: bold">#}
+{#                            ₹{{ current_price|floatformat:2 }}#}
+{#                        </span>#}
+{#                        {% if change and change_percent %}#}
+{#                            <span style="color: {{ price_change_color }}; font-size: 0.9rem;">#}
+{#                                {{ price_change_symbol }} {{ change|floatformat:2 }} ({{ change_percent|floatformat:2 }}%)#}
+{#                            </span>#}
+{#                        {% endif %}#}
+{#                    </div>#}
+{#                {% endif %}#}
+{#            </div>#}
+{#        </div>#}
+{#        <div id="watchlist-button-container">#}
+{#            {% if user.is_authenticated %}#}
+{#                {% include 'users/partials/watchlist_button.html' %}#}
+{#            {% endif %}#}
+{#        </div>#}
+{#    </div>#}
+{#    {% if user.is_authenticated %}#}
+{#        <div class="section-content"#}
+{#             hx-get="{% url 'get_qualitative_analysis' stock.ticker %}"#}
+{#             hx-trigger="load"#}
+{#             hx-target="this"#}
+{#             hx-swap="innerHTML">#}
+{#            <div class="htmx-loading-container">#}
+{#                <div class="htmx-loading-spinner"></div>#}
+{#                <div class="htmx-loading-text">Generating Qualitative Analysis...</div>#}
+{#            </div>#}
+{#        </div>#}
+{#    {% else %}#}
+{#        <div class="button-container">#}
+{#            <a href="{% url 'account_login' %}" class="styled-button">Get Qualitative Analysis</a>#}
+{#        </div>#}
+{#    {% endif %}#}
+{##}
+{#</div>#}
 
 <div id="stats" class="stats-container section-card">
     <h2>Stock Statistics</h2>
@@ -117,30 +117,30 @@
 {#        </div>#}
 {#    </div>#}
 {#</div>#}
-
-<div id="aii-analysis" class="aii-analysis-container section-card">
-    <h2>Aii Analysis</h2>
-    <div class="section-content">
-        <div id="analysis-content">
-            {% if saved_analysis %}
-                {% include "core/partials/aii_analysis.html" with analysis=saved_analysis analysis_data=analysis_data %}
-            {% else %}
-                <div class="button-container">
-                    <button
-                        hx-get="{% url 'get_analysis' stock.ticker %}"
-                        hx-target="#analysis-content"
-                        hx-swap="innerHTML"
-                        class="styled-button">Generate aii Analysis
-                    </button>
-                </div>
-            {% endif %}
-            <div class="htmx-loading-container">
-                <div class="htmx-loading-spinner"></div>
-                <div class="htmx-loading-text">Loading Aii Analysis...</div>
-            </div>
-        </div>
-    </div>
-</div>
+{##}
+{#<div id="aii-analysis" class="aii-analysis-container section-card">#}
+{#    <h2>Aii Analysis</h2>#}
+{#    <div class="section-content">#}
+{#        <div id="analysis-content">#}
+{#            {% if saved_analysis %}#}
+{#                {% include "core/partials/aii_analysis.html" with analysis=saved_analysis analysis_data=analysis_data %}#}
+{#            {% else %}#}
+{#                <div class="button-container">#}
+{#                    <button#}
+{#                        hx-get="{% url 'get_analysis' stock.ticker %}"#}
+{#                        hx-target="#analysis-content"#}
+{#                        hx-swap="innerHTML"#}
+{#                        class="styled-button">Generate aii Analysis#}
+{#                    </button>#}
+{#                </div>#}
+{#            {% endif %}#}
+{#            <div class="htmx-loading-container">#}
+{#                <div class="htmx-loading-spinner"></div>#}
+{#                <div class="htmx-loading-text">Loading Aii Analysis...</div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
 {##}
 {#<div id="news" class="news-container section-card">#}
 {#    <h2>Recent News</h2>#}
