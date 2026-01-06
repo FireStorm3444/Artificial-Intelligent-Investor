@@ -550,8 +550,9 @@ def get_analysis_partial(request, ticker):
                   {'analysis_data': parsed_analysis, 'stock': stock})
 
 def analyze_sentiment(text):
-
     from nltk.sentiment.vader import SentimentIntensityAnalyzer
+    nltk.download('vader_lexicon')
+
     if not text:
         return "No text provided for sentiment analysis."
 
