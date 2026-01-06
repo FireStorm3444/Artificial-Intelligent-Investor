@@ -506,7 +506,7 @@ def stock_ai_analysis(stock, key_stats, news):
                 thinking_config=types.ThinkingConfig(thinking_budget=-1)  # Set thinking budget as needed
             ),
         )
-        print(f"Generated Aii analysis for {stock.ticker}:")
+        print(f"Generated Aii analysis for {stock.ticker}: {response.text}")
         return response.text
     except Exception as e:
         print(f"Error generating Aii analysis: {e}")
