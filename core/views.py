@@ -570,6 +570,9 @@ def get_news_partial(request, ticker, yf_ticker=None):
     try:
         news = yf_ticker.news
 
+        if news is None:
+            news = []
+
         if not news:
             print("No news found for ticker:", ticker)
             return render(request, 'core/partials/news.html', {'news': 'no_news'})
@@ -627,6 +630,9 @@ def get_peer_comparison_partial(request, ticker):
             try:
                 peer_yf = CachedTicker(peer.ticker + ".NS")
                 peer_info = peer_yf.info
+
+                if not peer.info:
+                    continue
 
                 market_cap = peer_info.get('marketCap', 0)
                 market_cap_display = f"{market_cap/10000000:.2f}" if market_cap and market_cap > 0 else "N/A"
@@ -1140,7 +1146,7 @@ def get_cash_flow_partial(request, ticker, yf_ticker=None):
     try:
         cash_flow = yf_ticker.cashflow
 
-        if cash_flow.empty:
+        if cash_flow is None or cash_flow.empty:
             return render(request, 'core/partials/cash_flow.html', {'cash_flow_data': None, 'stock': stock})
 
         # Define the structure for cash flow items
@@ -1220,10 +1226,15 @@ def get_cash_flow_partial(request, ticker, yf_ticker=None):
 @yf_ticker_required
 def get_ratios_partial(request, ticker, yf_ticker=None):
     try:
-        info = yf_ticker.info
+        info = yf_ticker.info or {}
         balance_sheet = yf_ticker.balance_sheet
         financials = yf_ticker.financials
         quarters = yf_ticker.quarterly_financials
+
+        if balance_sheet is None: import pandas as pd; balance_sheet = pd.DataFrame()
+        if financials is None: import pandas as pd; financials = pd.DataFrame()
+        if quarters is None: import pandas as pd; quarters = pd.DataFrame()
+
         rs = "\u20B9"  # rupee symbol
 
         # Get valuation ratios from info
