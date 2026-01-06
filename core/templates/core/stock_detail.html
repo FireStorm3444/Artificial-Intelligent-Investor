@@ -230,7 +230,7 @@
     <h2>Ratios</h2>
     <div class="section-content"
          hx-get="{% url 'get_ratios' stock.ticker %}"
-         hx-trigger="load"
+         hx-trigger="click"
          hx-target="this"
          hx-swap="innerHTML">
         <div class="htmx-loading-container">
@@ -244,7 +244,7 @@
     <h2>Shareholding Pattern</h2>
     <div class="section-content"
          hx-get="{% url 'get_shareholding' stock.ticker %}"
-         hx-trigger="click"
+         hx-trigger="load"
          hx-target="this"
          hx-swap="innerHTML">
         <div class="htmx-loading-container">
