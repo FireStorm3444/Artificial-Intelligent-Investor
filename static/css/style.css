@@ -123,6 +123,7 @@ h2 {
 
 .sub-section-card {
     padding: 5px 20px;
+    min-width: 300px;
     background-color: white;
     margin: 10px 0;
     position: relative;
