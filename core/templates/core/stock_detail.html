@@ -146,7 +146,7 @@
     <h2>Recent News</h2>
     <div class="section-content"
          hx-get="{% url 'get_news' stock.ticker %}"
-         hx-trigger="load"
+         hx-trigger="click"
          hx-target="this"
          hx-swap="innerHTML">
         <div class="htmx-loading-container">
