@@ -202,7 +202,7 @@
     <h2>Balance Sheet</h2>
     <div class="section-content"
          hx-get="{% url 'get_balance_sheet' stock.ticker %}"
-         hx-trigger="click"
+         hx-trigger="load"
          hx-target="this"
          hx-swap="innerHTML">
         <div class="htmx-loading-container">
