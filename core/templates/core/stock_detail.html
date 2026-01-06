@@ -160,7 +160,7 @@
     <h2>Peer Companies</h2>
     <div class="section-content"
          hx-get="{% url 'get_peers' stock.ticker %}"
-         hx-trigger="load"
+         hx-trigger="click"
          hx-target="this"
          hx-swap="innerHTML">
         <div class="htmx-loading-container">
@@ -174,7 +174,7 @@
     <h2>Quarterly Results</h2>
     <div class="section-content"
          hx-get="{% url 'get_profit_loss_quarterly' stock.ticker %}"
-         hx-trigger="click"
+         hx-trigger="load"
          hx-target="this"
          hx-swap="innerHTML">
         <div class="htmx-loading-container">
