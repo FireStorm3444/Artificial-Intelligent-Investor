@@ -138,7 +138,7 @@ def get_qualitative_analysis(stock):
                 **Output Format:** Strictly adhere to the specified Markdown headings and bullet points. Do not add introductory or concluding sentences outside of these sections."""
 
         response = client.models.generate_content(
-            model="gemini-3.5-pro",
+            model="gemini-3-pro-preview",
             contents=prompt,
             config=types.GenerateContentConfig(
                 thinking_config=types.ThinkingConfig(thinking_budget=-1)  # Set thinking budget as needed
