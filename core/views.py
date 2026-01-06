@@ -424,13 +424,13 @@ def parse_aii_analysis(text):
 
     for line in text.split('\n'):
         line = line.strip()
-        if "Pros:**" in line or "**Pros:**" in line or line.startswith("Pros"):
+        if " Pros " in line or "Pros:**" in line or "**Pros:**" in line or line.startswith("Pros"):
             current_section = 'pros'
             continue
-        elif "Cons:**" in line or "**Cons:**" in line or line.startswith("Cons"):
+        elif " Cons " in line or "Cons:**" in line or "**Cons:**" in line or line.startswith("Cons"):
             current_section = 'cons'
             continue
-        elif "Summary:**" in line or "**Summary:**" in line or line.startswith("Summary"):
+        elif " Summary" in line or "Summary:**" in line or "**Summary:**" in line or line.startswith("Summary"):
             current_section = 'summary'
             continue
 
