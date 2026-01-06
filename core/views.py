@@ -503,7 +503,7 @@ def stock_ai_analysis(stock, key_stats, news):
             model="gemini-3-flash-preview",
             contents=prompt,
             config=types.GenerateContentConfig(
-                thinking_config=types.ThinkingConfig(thinking_budget=-1)
+                thinking_config=types.ThinkingConfig(thinking_budget=-1)  # Set thinking budget as needed
             ),
         )
         print(f"Generated Aii analysis for {stock.ticker}:")
