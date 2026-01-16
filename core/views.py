@@ -621,7 +621,7 @@ def get_peer_comparison_partial(request, ticker):
         industry = stock.industry
 
         # Get peers + current stock (total 10 stocks)
-        peers = Stock.objects.filter(industry=industry).exclude(ticker=ticker).order_by('-market_cap')[:9]
+        peers = Stock.objects.filter(industry=industry).exclude(ticker=ticker).order_by('-market_cap')[:5]
 
         # Create a list to store all stocks with their data
         all_stocks_data = []
