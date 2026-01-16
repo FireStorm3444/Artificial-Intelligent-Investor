@@ -626,30 +626,42 @@ def get_peer_comparison_partial(request, ticker):
         # Create a list to store all stocks with their data
         all_stocks_data = []
 
+        # Helper function to safely format numbers
+        def safe_fmt(val, is_percent=False):
+            if val is None:
+                return "N/A"
+            try:
+                if is_percent:
+                    return f"{float(val) * 100:.2f}%"  # Assuming raw data is 0.05 for 5%
+                return f"{float(val):.2f}"
+            except (ValueError, TypeError):
+                return "N/A"
+
         # Add peer companies
         for peer in peers:
             try:
                 peer_yf = CachedTicker(peer.ticker + ".NS")
                 peer_info = peer_yf.info
 
-                if not peer.info:
+                if not peer_info:
                     continue
 
                 market_cap = peer_info.get('marketCap', 0)
-                market_cap_display = f"{market_cap/10000000:.2f}" if market_cap and market_cap > 0 else "N/A"
+                market_cap_display = f"{market_cap/10000000:.2f}" if market_cap else "N/A"
 
                 all_stocks_data.append({
                     "name": peer.name,
                     "ticker": peer.ticker,
-                    "current_price": f"{peer_info.get('currentPrice'):.2f}",
+                    "current_price": safe_fmt(peer_info.get('currentPrice')),
                     "market_cap": market_cap_display,
-                    "market_cap_raw": market_cap if market_cap else 0,  # For sorting
-                    "pe_ratio": f"{peer_info.get('trailingPE'):.2f}" if peer_info.get('trailingPE') is not None else "N/A",
-                    "eps": f"{peer_info.get('trailingEps'):.2f}" if peer_info.get('trailingEps') is not None else "N/A",
-                    "dividend_yield": f"{peer_info.get('dividendYield'):.2f}%" if peer_info.get('dividendYield') is not None else "0.00%",
-                    "beta": f"{peer_info.get('beta'):.2f}" if peer_info.get('beta') is not None else "N/A",
-                    "52_week_high": f"{peer_info.get('fiftyTwoWeekHigh'):.2f}" if peer_info.get('fiftyTwoWeekHigh') is not None else "N/A",
-                    "52_week_low": f"{peer_info.get('fiftyTwoWeekLow'):.2f}" if peer_info.get('fiftyTwoWeekLow') is not None else "N/A",
+                    "market_cap_raw": market_cap if market_cap else 0,
+                    "pe_ratio": safe_fmt(peer_info.get('trailingPE')),
+                    "eps": safe_fmt(peer_info.get('trailingEps')),
+                    # Dividend Yield is usually returned as 0.015 (1.5%) by Yahoo
+                    "dividend_yield": f"{peer_info.get('dividendYield', 0) * 100:.2f}%" if peer_info.get('dividendYield') else "0.00%",
+                    "beta": safe_fmt(peer_info.get('beta')),
+                    "52_week_high": safe_fmt(peer_info.get('fiftyTwoWeekHigh')),
+                    "52_week_low": safe_fmt(peer_info.get('fiftyTwoWeekLow')),
                     "is_base": False
                 })
             except Exception as e:
@@ -661,21 +673,23 @@ def get_peer_comparison_partial(request, ticker):
             base_yf = CachedTicker(stock.ticker + ".NS")
             base_info = base_yf.info
 
+            base_info = base_info if base_info else {}
+
             market_cap = base_info.get('marketCap', 0)
             market_cap_display = f"{market_cap/10000000:.2f}" if market_cap and market_cap > 0 else "N/A"
 
             all_stocks_data.append({
                 "name": stock.name,
                 "ticker": stock.ticker,
-                "current_price": f"{base_info.get('currentPrice'):.2f}",
+                "current_price": safe_fmt(base_info.get('currentPrice')),
                 "market_cap": market_cap_display,
-                "market_cap_raw": market_cap if market_cap else 0,  # For sorting
-                "pe_ratio": f"{base_info.get('trailingPE'):.2f}" if base_info.get('trailingPE') is not None else "N/A",
-                "eps": f"{base_info.get('trailingEps'):.2f}" if base_info.get('trailingEps') is not None else "N/A",
-                "dividend_yield": f"{base_info.get('dividendYield'):.2f}%" if base_info.get('dividendYield') is not None else "0.00%",
-                "beta": f"{base_info.get('beta'):.2f}" if base_info.get('beta') is not None else "N/A",
-                "52_week_high": f"{base_info.get('fiftyTwoWeekHigh'):.2f}" if base_info.get('fiftyTwoWeekHigh') is not None else "N/A",
-                "52_week_low": f"{base_info.get('fiftyTwoWeekLow'):.2f}" if base_info.get('fiftyTwoWeekLow') is not None else "N/A",
+                "market_cap_raw": market_cap if market_cap else 0,
+                "pe_ratio": safe_fmt(base_info.get('trailingPE')),
+                "eps": safe_fmt(base_info.get('trailingEps')),
+                "dividend_yield": f"{base_info.get('dividendYield', 0) * 100:.2f}%" if base_info.get('dividendYield') else "0.00%",
+                "beta": safe_fmt(base_info.get('beta')),
+                "52_week_high": safe_fmt(base_info.get('fiftyTwoWeekHigh')),
+                "52_week_low": safe_fmt(base_info.get('fiftyTwoWeekLow')),
                 "is_base": True
             })
         except Exception as e:
