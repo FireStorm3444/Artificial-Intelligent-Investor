@@ -617,16 +617,17 @@ def get_news_partial(request, ticker, yf_ticker=None):
 
 def get_peer_comparison_partial(request, ticker):
     try:
-        stock = Stock.objects.get(ticker__iexact=ticker)
+        stock = stock_trie.search_prefix(ticker)[0]
         industry = stock.industry
 
         # Get peers + current stock (total 10 stocks)
+        # Reduced to 5 to prevent timeouts
         peers = Stock.objects.filter(industry=industry).exclude(ticker=ticker).order_by('-market_cap')[:5]
 
         # Create a list to store all stocks with their data
         all_stocks_data = []
 
-        # Helper function to safely format numbers
+        # Helper function to safely format numbers (Prevents "TypeError: unsupported format string")
         def safe_fmt(val, is_percent=False):
             if val is None:
                 return "N/A"
@@ -637,18 +638,21 @@ def get_peer_comparison_partial(request, ticker):
             except (ValueError, TypeError):
                 return "N/A"
 
-        # Add peer companies
+        # --- 1. Process Peer Companies ---
         for peer in peers:
             try:
+                # Use CachedTicker
                 peer_yf = CachedTicker(peer.ticker + ".NS")
                 peer_info = peer_yf.info
 
+                # FIX 1: Check peer_info (Dict), NOT peer.info (Model)
                 if not peer_info:
                     continue
 
                 market_cap = peer_info.get('marketCap', 0)
-                market_cap_display = f"{market_cap/10000000:.2f}" if market_cap else "N/A"
+                market_cap_display = f"{market_cap / 10000000:.2f}" if market_cap else "N/A"
 
+                # FIX 2: Use safe_fmt to handle None values gracefully
                 all_stocks_data.append({
                     "name": peer.name,
                     "ticker": peer.ticker,
@@ -658,25 +662,27 @@ def get_peer_comparison_partial(request, ticker):
                     "pe_ratio": safe_fmt(peer_info.get('trailingPE')),
                     "eps": safe_fmt(peer_info.get('trailingEps')),
                     # Dividend Yield is usually returned as 0.015 (1.5%) by Yahoo
-                    "dividend_yield": f"{peer_info.get('dividendYield', 0) * 100:.2f}%" if peer_info.get('dividendYield') else "0.00%",
+                    "dividend_yield": f"{peer_info.get('dividendYield', 0) * 100:.2f}%" if peer_info.get(
+                        'dividendYield') else "0.00%",
                     "beta": safe_fmt(peer_info.get('beta')),
                     "52_week_high": safe_fmt(peer_info.get('fiftyTwoWeekHigh')),
                     "52_week_low": safe_fmt(peer_info.get('fiftyTwoWeekLow')),
                     "is_base": False
                 })
             except Exception as e:
-                print(f"Error fetching data for peer {peer.ticker}: {e}")
+                print(f"Skipping peer {peer.ticker}: {e}")
                 continue
 
-        # Add the current stock (base stock)
+        # --- 2. Process Base Stock ---
         try:
             base_yf = CachedTicker(stock.ticker + ".NS")
             base_info = base_yf.info
 
+            # Ensure base_info is not None (if Rate Limited)
             base_info = base_info if base_info else {}
 
             market_cap = base_info.get('marketCap', 0)
-            market_cap_display = f"{market_cap/10000000:.2f}" if market_cap and market_cap > 0 else "N/A"
+            market_cap_display = f"{market_cap / 10000000:.2f}" if market_cap else "N/A"
 
             all_stocks_data.append({
                 "name": stock.name,
@@ -686,7 +692,8 @@ def get_peer_comparison_partial(request, ticker):
                 "market_cap_raw": market_cap if market_cap else 0,
                 "pe_ratio": safe_fmt(base_info.get('trailingPE')),
                 "eps": safe_fmt(base_info.get('trailingEps')),
-                "dividend_yield": f"{base_info.get('dividendYield', 0) * 100:.2f}%" if base_info.get('dividendYield') else "0.00%",
+                "dividend_yield": f"{base_info.get('dividendYield', 0) * 100:.2f}%" if base_info.get(
+                    'dividendYield') else "0.00%",
                 "beta": safe_fmt(base_info.get('beta')),
                 "52_week_high": safe_fmt(base_info.get('fiftyTwoWeekHigh')),
                 "52_week_low": safe_fmt(base_info.get('fiftyTwoWeekLow')),
@@ -702,15 +709,17 @@ def get_peer_comparison_partial(request, ticker):
         from collections import OrderedDict
         peer_details = OrderedDict()
         for stock_data in all_stocks_data:
-            # Remove the raw market cap as it's only needed for sorting
             ticker_key = stock_data['ticker']
             stock_data_copy = stock_data.copy()
             del stock_data_copy['market_cap_raw']
             peer_details[ticker_key] = stock_data_copy
 
         return render(request, 'core/partials/peer_comparison.html', {'peer_details': peer_details})
+
     except Exception as e:
-        return HttpResponse(f"Error fetching peer comparison data: {str(e)}", status=500)
+        # This catches "Stock Not Found" or other critical errors
+        print(f"CRITICAL ERROR in Peer Comparison: {e}")
+        return HttpResponse(f"Error: {str(e)}", status=500)
 
 def format_helper(data, items):
     # Get available years (columns) with month names
