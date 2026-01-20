@@ -80,8 +80,8 @@ Follow these steps to run the project locally.
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/FireStorm3444/artificial-intelligent-investor.git](https://github.com/yourusername/artificial-intelligent-investor.git)
-cd artificial-intelligent-investor
+git clone https://github.com/FireStorm3444/Artificial-Intelligent-Investor.git
+cd Artificial-Intelligent-Investor
 ```
 
 ### 2. Create a Virtual Environment
@@ -120,7 +120,9 @@ python manage.py runserver
 ```
 Visit http://127.0.0.1:8000 in your browser.
 
-## Project Structure
+---
+
+## 📂 Project Structure
 ```
 ├── aii/                # Project Settings
 ├── core/               # Main Application Logic
@@ -132,7 +134,7 @@ Visit http://127.0.0.1:8000 in your browser.
 ├── templates/          # HTML Templates
 └── static/             # CSS & Images
 ```
-
+---
 ## 🤝 Contributing
 Contributions are welcome! Please fork the repository and submit a pull request for any enhancements.
 
@@ -142,7 +144,9 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 - Push to the Branch (```git push origin feature/AmazingFeature```)
 - Open a Pull Request
 
-📄 License
+---
+
+## 📄 License
 Distributed under the MIT License. See LICENSE for more information.
 
-Built with ❤️ by Shekhar Kumar [LinkedIn](https://www.linkedin.com/in/shekhar-coder)
+Built with ❤️ by Shekhar Kumar | [LinkedIn](https://www.linkedin.com/in/shekhar-coder)
