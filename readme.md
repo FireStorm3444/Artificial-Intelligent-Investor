@@ -147,6 +147,6 @@ Contributions are welcome! Please fork the repository and submit a pull request 
 ---
 
 ## 📄 License
-Distributed under the MIT License. See LICENSE for more information.
+Distributed under the Apache-2.0 License. See LICENSE for more information.
 
 Built with ❤️ by Shekhar Kumar | [LinkedIn](https://www.linkedin.com/in/shekhar-coder)
