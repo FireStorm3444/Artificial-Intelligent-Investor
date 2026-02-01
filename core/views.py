@@ -249,9 +249,8 @@ def get_stats_partial(request, ticker, yf_ticker=None):
         high = info.get('fiftyTwoWeekHigh')
         low = info.get('fiftyTwoWeekLow')
         roce = None
-        prev_close = info.get('previousClose')
 
-        ebit = financials.loc['EBIT',financials.columns[0]]
+        ebit = financials.loc['EBIT',financials.columns[0]] if 'EBIT' in financials.index else None
         total_equity = balance_sheet.loc['Stockholders Equity', balance_sheet.columns[0]] if 'Stockholders Equity' in balance_sheet.index else None
         total_debt = info.get('totalDebt')
 
@@ -494,7 +493,7 @@ def stock_ai_analysis(stock, key_stats, news):
         Get additional necessary data from web and Based on the data above and web data, provide a brief analysis covering the following:
         1.  Pros: A few bullish points based on the data you gathered and I provided.
         2.  Cons: A few bearish points or potential risks to consider.
-        3.  Summary: A neutral, concluding summary of the company's current position.
+        3.  Summary: A neutral, concluding summary of the company's current position. DO NOT ADD A DESCALAIMER.
 
         Keep the language clear and concise.
         """
@@ -617,12 +616,11 @@ def get_news_partial(request, ticker, yf_ticker=None):
 
 def get_peer_comparison_partial(request, ticker):
     try:
-        stock = stock_trie.search_prefix(ticker)[0]
+        stock = Stock.objects.get(ticker__iexact=ticker)
         industry = stock.industry
 
         # Get peers + current stock (total 10 stocks)
-        # Reduced to 5 to prevent timeouts
-        peers = Stock.objects.filter(industry=industry).exclude(ticker=ticker).order_by('-market_cap')[:5]
+        peers = Stock.objects.filter(industry=industry).exclude(ticker=ticker).order_by('-market_cap')[:9]
 
         # Create a list to store all stocks with their data
         all_stocks_data = []

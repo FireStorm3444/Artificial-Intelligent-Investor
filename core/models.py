@@ -6,6 +6,7 @@ class Stock(models.Model):
     industry = models.CharField(max_length=255, null=True, blank=True)
     sector = models.CharField(max_length=255, null=True, blank=True)
     website = models.URLField(null=True, blank=True)
+    market_cap = models.IntegerField(null=True, blank=True)
     last_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
