@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = os.getenv('DEBUG', 'False') == 'True'
 DEBUG = False
-ALLOWED_HOSTS = ['ai-investor.in', 'www.ai-investor.in', 'ai-investor.online', 'www.ai-investor.online', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['64.227.134.4', 'ai-investor.in', 'ai-investor.online', 'www.ai-investor.in', 'www.ai-investor.online', 'localhost']
 
 # Database Configuration (Switch to Postgres if URL is present)
 DATABASES = {
@@ -173,17 +173,17 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 # Compression and caching support
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
-# Trust the secure connection from Render
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# USE_X_FORWARDED_HOST = True
-# SECURE_SSL_REDIRECT = True
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
+# Trust the secure connection
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Local Development Settings
-SECURE_SSL_REDIRECT = False
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+# SECURE_SSL_REDIRECT = False
+# SESSION_COOKIE_SECURE = False
+# CSRF_COOKIE_SECURE = False
 
 # Ensure the login redirect uses HTTPS
 # ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
