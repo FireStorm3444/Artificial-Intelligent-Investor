@@ -493,7 +493,7 @@ def stock_ai_analysis(stock, key_stats, news):
         Get additional necessary data from web and Based on the data above and web data, provide a brief analysis covering the following:
         1.  Pros: A few bullish points based on the data you gathered and I provided.
         2.  Cons: A few bearish points or potential risks to consider.
-        3.  Summary: A neutral, concluding summary of the company's current position. DO NOT ADD A DESCALAIMER.
+        3.  Summary: A neutral, concluding summary of the company's current position.
 
         Keep the language clear and concise.
         """
