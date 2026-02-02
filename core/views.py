@@ -429,7 +429,7 @@ def parse_aii_analysis(text):
         elif " Cons" in line or "Cons:**" in line or "**Cons:**" in line or line.startswith("Cons"):
             current_section = 'cons'
             continue
-        elif " Summary" in line or "Summary:**" in line or "**Summary:**" in line or line.startswith("Summary"):
+        elif "Summary" in line or "Summary:**" in line or "**Summary:**" in line or line.startswith("Summary"):
             current_section = 'summary'
             continue
 
