@@ -25,7 +25,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = os.getenv('DEBUG', 'False') == 'True'
-DEBUG = True
+DEBUG = False
+
 ALLOWED_HOSTS = ['64.227.134.4', 'ai-investor.in', 'ai-investor.online', 'www.ai-investor.in', 'www.ai-investor.online', 'localhost']
 
 # Database Configuration (Switch to Postgres if URL is present)
@@ -73,7 +74,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'aii.urls'
@@ -133,9 +134,6 @@ SOCIALACCOUNT_EMAIL_REQUIRED = False  # Don't require email confirmation
 SOCIALACCOUNT_QUERY_EMAIL = True  # Get email from social account
 SOCIALACCOUNT_STORE_TOKENS = False  # Don't store OAuth tokens unless needed
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Kolkata'
@@ -159,6 +157,7 @@ ACCOUNT_LOGIN_METHODS = ['email']        # Use email for login (replaces ACCOUNT
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']  # Email required, username not required
 ACCOUNT_UNIQUE_EMAIL = True              # Each email must be unique
 ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Make email verification optional to not interfere with social login
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
 ACCOUNT_LOGOUT_ON_GET = True
 LOGIN_REDIRECT_URL = '/' # Redirect to home page after login
@@ -173,6 +172,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 # Compression and caching support
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
+<<<<<<< Updated upstream
 # Trust the secure connection
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
@@ -187,6 +187,14 @@ CSRF_COOKIE_SECURE = True
 
 # Ensure the login redirect uses HTTPS
 # ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+=======
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+>>>>>>> Stashed changes
 
 # Caching Configuration
 CACHES = {
